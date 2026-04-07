@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Callable
 from .Exception import HttpException
 
 
@@ -26,7 +26,7 @@ class TrieTree:
     def __init__(self):
         self.root = TrieTreeNode()
 
-    def insert(self, path: str, handler_func: Callable[[Any], Any], methods: list | None = None):
+    def insert(self, path: str, handler_func: Callable, methods: list | None = None):
         node = self.root  # 根节点
         route_param_names = []  # 路由参数
         # has_wildcard = False  # 注册路由是否存在通配符
