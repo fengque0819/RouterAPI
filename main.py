@@ -1,19 +1,22 @@
-from src.Exception import HttpException
-from src.TrieTree import TrieTree
+import asyncio
 from src.logger import logger
-from app.handler import user_handler_request
-from http.server import HTTPServer
+from src.server import AsyncHttpServer
+from src.TrieTree import TrieTree
+from app.handler import *
 
 
-if __name__ == '__main__':
+async def main():
     # 注册路由
     router = TrieTree()
-    router.insert(path="/", handler_func=user_handler_request, methods=["GET"])
-    router.insert("/*", user_handler_request, methods=["GET"])
-    router.insert("/user/{id}", user_handler_request, methods=["GET", "POST"])
-    router.insert("/user/{id}/*file", user_handler_request, methods=["GET"])
 
-    # 启动httpserver
-    server = HTTPServer(('localhost', 9000), )
-    logger.info("Server running on http://localhost:9000")
-    server.serve_forever()
+    # 启动异步服务器
+    server = AsyncHttpServer(host="127.0.0.1", port=9000, router=router)
+    try:
+        await server.start()
+    except KeyboardInterrupt:
+        # Ctrl+C
+        await server.shutdown()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
